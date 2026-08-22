@@ -1,5 +1,13 @@
 import { MoodType, MOOD_CONFIG } from '../types/journal';
 
+const selectedMoodClasses: Record<MoodType, string> = {
+  terrible: 'bg-violet-600 ring-violet-600',
+  sad: 'bg-red-500 ring-red-500',
+  okay: 'bg-amber-500 ring-amber-500',
+  good: 'bg-blue-500 ring-blue-500',
+  great: 'bg-emerald-500 ring-emerald-500',
+};
+
 /**
  * MoodPicker component for selecting a mood
  * @param selectedMood The currently selected mood
@@ -23,10 +31,11 @@ export function MoodPicker({
         return (
           <button
             key={mood}
+            type="button"
             onClick={() => onChange(mood)}
             className={`flex flex-col items-center gap-1 p-3 rounded-lg transition-all ${
               isSelected
-                ? `bg-${config.color} text-white shadow-lg ring-2 ring-offset-2 ring-${config.color}`
+                ? `${selectedMoodClasses[mood]} text-white shadow-lg ring-2 ring-offset-2`
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500`}
             aria-label={config.label}

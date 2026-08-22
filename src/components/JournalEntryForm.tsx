@@ -31,25 +31,30 @@ export function JournalEntryForm({
   const [mood, setMood] = useState<MoodType>(initialEntry?.mood || DEFAULT_MOOD);
   const [content, setContent] = useState(initialEntry?.content || '');
   const [isSaving, setIsSaving] = useState(false);
+  const [contentError, setContentError] = useState('');
+  const characterCount = content.length;
 
   useEffect(() => {
     if (initialEntry) {
       setMood(initialEntry.mood);
       setContent(initialEntry.content);
+      setContentError('');
       return;
     }
 
     setMood(DEFAULT_MOOD);
     setContent('');
+    setContentError('');
   }, [initialEntry, date]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) {
-      alert('Please write something in your journal entry');
+      setContentError('Please write something in your journal entry.');
       return;
     }
 
+    setContentError('');
     setIsSaving(true);
     try {
       onSave(date, mood, content);
@@ -92,26 +97,46 @@ export function JournalEntryForm({
       )}
 
       {/* Mood Picker */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+      <fieldset>
+        <legend className="block text-sm font-medium text-gray-700 mb-3">
           How are you feeling today?
-        </label>
+        </legend>
         <MoodPicker selectedMood={mood} onChange={setMood} />
-      </div>
+      </fieldset>
 
       {/* Content Textarea */}
       <div>
-        <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-          Journal Entry
-        </label>
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+            Journal Entry
+          </label>
+          <span className="text-xs font-medium text-gray-500" aria-live="polite" id="content-counter">
+            {characterCount.toLocaleString()} character{characterCount === 1 ? '' : 's'}
+          </span>
+        </div>
         <textarea
           id="content"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => {
+            setContent(e.target.value);
+            if (contentError) {
+              setContentError('');
+            }
+          }}
           placeholder="Write your thoughts, feelings, and reflections here..."
           className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           disabled={isSaving}
+          aria-invalid={contentError ? 'true' : 'false'}
+          aria-describedby={contentError ? 'content-counter content-error' : 'content-counter'}
         />
+        {contentError && (
+          <p id="content-error" className="mt-2 text-xs font-medium text-red-600" role="alert">
+            {contentError}
+          </p>
+        )}
+        <p className="mt-2 text-xs text-gray-500">
+          Keep writing — your thoughts will be saved when you submit.
+        </p>
       </div>
 
       {/* Action Buttons */}

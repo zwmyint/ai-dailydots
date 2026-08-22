@@ -22,9 +22,10 @@ export function Header() {
           </div>
         </div>
 
-        <nav className="flex gap-6">
+        <nav aria-label="Primary navigation" className="flex gap-6">
           <Link
             to="/"
+            aria-current={isActive('/') ? 'page' : undefined}
             className={`pb-2 text-sm font-medium transition-colors ${
               isActive('/')
                 ? 'text-blue-600 border-b-2 border-blue-600'
@@ -35,6 +36,7 @@ export function Header() {
           </Link>
           <Link
             to="/journals"
+            aria-current={isActive('/journals') ? 'page' : undefined}
             className={`pb-2 text-sm font-medium transition-colors ${
               isActive('/journals')
                 ? 'text-blue-600 border-b-2 border-blue-600'
@@ -45,6 +47,7 @@ export function Header() {
           </Link>
           <Link
             to="/new"
+            aria-current={isActive('/new') ? 'page' : undefined}
             className={`pb-2 text-sm font-medium transition-colors ${
               isActive('/new')
                 ? 'text-blue-600 border-b-2 border-blue-600'
